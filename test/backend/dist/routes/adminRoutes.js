@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const adminController_1 = require("../controllers/adminController");
+const auth_1 = require("../middlewares/auth");
+const validate_1 = require("../middlewares/validate");
+const schemas_1 = require("../utils/schemas");
+const router = (0, express_1.Router)();
+// Apply admin protection to all routes in this router
+router.use(auth_1.authenticate);
+router.use((0, auth_1.requireRole)(['ADMIN']));
+router.get('/stats', adminController_1.getStats);
+router.post('/users', (0, validate_1.validateBody)(schemas_1.addUserSchema), adminController_1.addUser);
+router.post('/stores', (0, validate_1.validateBody)(schemas_1.addStoreSchema), adminController_1.addStore);
+router.get('/stores', adminController_1.getStores);
+router.get('/users', adminController_1.getUsers);
+router.get('/available-owners', adminController_1.getAvailableOwners);
+router.delete('/users/:id', adminController_1.deleteUser);
+router.delete('/stores/:id', adminController_1.deleteStore);
+router.put('/stores/:id', (0, validate_1.validateBody)(schemas_1.addStoreSchema), adminController_1.updateStore);
+exports.default = router;
